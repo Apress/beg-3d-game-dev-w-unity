@@ -1,0 +1,48 @@
+Name- A descriptive name such as “Open Chest Lid”
+Location – state of being of the object- visible, pickable, etc
+Visibility Type -  how to handle visibility for this state
+Description (verbose)- Example “It is a beautifully constructed chest lid laying open for all to see”
+Animation – the animation that will play when the object goes into this state 
+Animation Delay- Time delay associated with the animation
+Audio- the sound effect associated with the animation
+Audio Delay- the delay associated with the sound effect
+Loop Animation- the animation that will play after the initial animation
+Loop Audio- Sound effect associated with the looping animation
+
+
+Location:
+0-Object is in scene and active
+1-Object is in Inventory 
+2-Object is Cursor 
+3-Object is not pickable (in scene and inactive) 
+4-Object is no longer in scene
+
+Visibility Type
+0- N/A
+1 -Show at start 
+2- Hide at start
+3 -Show at start, hide at end
+4- Hide at end
+
+Cursor States:
+0- Not in scene
+1- In Inventory
+2- Is Cursor
+
+Generic Replies:
+	"@" represents the picked object
+	"^" represents the cursor that picked it
+
+Drop Type:
+0 – Not droppable
+1 – Droppable
+2 – Is a drop location
+
+case "a": trigger animation only on the auxiliary object
+case "s": send a message to a script on this object to the “DoTheJob” function
+case "b": change the state on the object only- no animations
+case "p": instantiate a prefab-
+	   the prefab is put in the Prefabs array at the bottom of the Object Lookup component, its element number is the is s2 number that follows the p, example: p2_Some Object, instanciates the prefab at element 2 on the object that was picked
+
+
+Setting the new state to -1 in the Lookup information flags an object to remain in its current state, but display an action message

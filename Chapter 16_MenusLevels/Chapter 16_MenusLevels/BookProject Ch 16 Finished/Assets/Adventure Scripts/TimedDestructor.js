@@ -1,0 +1,1 @@
+Destroy (gameObject,1.5); //destroy object after 1.5 seconds

@@ -1,0 +1,99 @@
+Name- A descriptive name such as “Open Chest Lid”
+Location – state of being of the object- visible, pickable, etc
+Visibility Type -  how to handle visibility for this state
+Description (verbose)- Example “It is a beautifully constructed chest lid laying open for all to see”
+Animation – the animation that will play when the object goes into this state 
+Animation Delay- Time delay associated with the animation
+Audio- the sound effect associated with the animation
+Audio Delay- the delay associated with the sound effect
+Loop Animation- the animation that will play after the initial animation
+Loop Audio- Sound effect associated with the looping animation
+
+
+Location:
+0-Object is in scene and active
+1-Object is in Inventory 
+2-Object is Cursor 
+3-Object is not pickable (in scene and inactive) 
+4-Object is no longer in scene
+
+Visibility Type
+0- N/A
+1 -Show at start 
+2- Hide at start
+3 -Show at start, hide at end
+4- Hide at end
+
+Cursor States:
+0- Not in scene
+1- In Inventory
+2- Is Cursor
+
+Generic Replies:
+	"@" represents the picked object
+	"^" represents the cursor that picked it
+
+Drop Type:
+0 – Not droppable
+1 – Droppable
+2 – Is a drop location
+3 – Uses rigidbody for transform, this will save current transforms for load/save  
+
+case "a": trigger animation only on the auxiliary object
+case "s": send a message to a script on this object to the “DoTheJob” function
+case "b": change the state on the object only- no animations
+case "p": instantiate a prefab-
+	   the prefab is put in the Prefabs array at the bottom of the Object Lookup component, its element number is the is s2 number that follows the p, example: p2_Some Object, instanciates the prefab at element 2 on the object that was picked
+
+
+Setting the new state to -1 in the Lookup information flags an object to remain in its current state, but display an action message
+
+Audio:
+Sound effects on objects tagged as "ActionObjects" are played via PlayClipAtPoint  
+Sound effects on non-action objects must be tagged as "FX"
+Audio Source components on "ActionObjects" are reserved for voice/dialogue
+Non-ActionObjects with Audio Sources for voice/dialogue must be tagged as "Voice"
+Objects with Audio Source components for ambient sounds must be tagged as "Ambient"
+Objects with Audio Source components for music must be tagged as "Music"
+
+Menu Backgrounds:
+Menu backgrounds can be 2D or 3D
+The menuCameras and menuBackgrounds arrays hold the available assets
+For cameras, element 0 is the default player or main camera 
+For texture backgrounds, a plain black texture is default, element 0, background 100
+If a menu ever uses more than the default main camera, it must have an array containing?
+ the assignments for each level by element number
+Level 0 = Start menu
+Level 1 = MainLevel
+Level 3 = FinalLevel
+Texture backgrounds will be the texture's element number + 100  
+Example: the array for the settings menu might look as follows: (0,2,101),
+where in the mainLevel, it uses the camera in element 2 of the menuCameras array and in the FinalLevel, it uses the texture in element 1 of the menuBackgrounds array 
+
+Non-Action Objects with states: 
+Objects whose states need to be tracked for load/save must have the GenericStateTracker script
+The object must contain a function called "UpdateStateVar" that updates the object's current state into the GenericStateTracker
+The object must contain a function named "LoadState" that receives the new state as an argument and processes the object and its dependencies appropriately
+The LoadState function may be in any of its scripts
+
+Bonus version:
+
+Introduced some physics functionality to the Light Glyph-
+When picked, the simple script, RigidBodyAdd, adds a rigidbody component to the object so it falls to the ground
+It bounces because it has a Physics Material assigned to its Mesh collider-  I duplicated one of the standard ones & changed a few of its settings to get the right amount of bounce
+Also new is a small script to make a noise when the glyph hits things as it bounces
+The CollisionFX script makes sure of a minimum velocity, then randomizes the pitch of the assigned audio clip
+
+To compliment the Light Glyph, I also created a little script named LightForTunnels
+It gets added to collision trigger objects at the top and bottom of the dome's tunnel system
+A light has been added to the First Person Controller 
+If the Light Glyph Icon's state is greater than 0 (the player has it), the light is turned on and off while the player is in the tunnels
+
+The moving platform to reach the Light Shrine, is pretty basic- it uses functionality from one of the early chapters
+make sure the Moving Platform option is enabled on the Character Motor component of the First Person Controller
+
+I've left another useful script, FXOnEnter, in the Adventure Scripts folder- you could use it to cause a splash sound to play when the player enters the water
+
+You might also like to try the HideInMaze script- it will hide the object it resides on inside the maze at start up
+
+
